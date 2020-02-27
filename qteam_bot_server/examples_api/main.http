@@ -1,0 +1,40 @@
+# SubscriptionCreated
+POST http://127.0.0.1:8000/register/ddd/
+Content-Type: application/json
+{}
+
+
+
+###
+GET http://127.0.0.1:8000/getcards/ddd/
+Content-Type: application/json
+{}
+
+###
+###
+POST http://127.0.0.1:8000/like/ddd/
+Content-Type: application/json
+
+{
+    "str_to_parse":"{\"card_id\":1}"
+}
+
+
+###
+
+POST http://127.0.0.1:8000/dislike/ddd/
+Content-Type: application/json
+
+{
+    "str_to_parse":"{\"card_id\":1}"
+}
+
+###
+PUT http://127.0.0.1:8000/updprefs/ddd/
+Content-Type: application/json
+
+{
+    "str_to_parse":"{\"is_kulinar\":true}"
+}
+
+###

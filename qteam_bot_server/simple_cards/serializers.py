@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import Card
+from .models import Card, BotUser
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,5 +21,11 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
     #serializers.CharField(source='get_absolute_url', read_only=True)
     class Meta:
         model = Card
-        fields = ['title', 'card_text', 'card_cat']
+        fields = ['title', 'card_text', 'card_cat', 'id']
 
+
+
+class BotUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BotUser
+        fields = '__all__'
