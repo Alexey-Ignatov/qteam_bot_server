@@ -100,35 +100,16 @@ class LikeApi(APIView):
         except Card.DoesNotExist:
             raise Http404
 
+        if real_data['type'] == 'like':
+            CardLike.objects.create(bot_user=bot_user, date=timezone.now(), card = card )
 
-        CardLike.objects.create(bot_user=bot_user, date=timezone.now(), card = card )
-
-        return Response({})
-
-
-class DislikeApi(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.AllowAny]
-
-    @staticmethod
-    def post(request, bot_user_id):
-        print(request.data)
-        meta = request.META
-
-        real_data = json.loads(request.data['str_to_parse'])
-        try:
-            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
-        except BotUser.DoesNotExist:
-            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
-
-        try:
-            card = Card.objects.get(pk=real_data['card_id'])
-        except Card.DoesNotExist:
-            raise Http404
-
-        CardDislike.objects.create(bot_user=bot_user, date=timezone.now(), card=card)
+        if real_data['type'] == 'dislike':
+            CardDislike.objects.create(bot_user=bot_user, date=timezone.now(), card = card )
 
         return Response({})
+
+
+
 
 class GetCardsApi(APIView):
 

@@ -16,17 +16,16 @@ POST http://127.0.0.1:8000/like/ddd/
 Content-Type: application/json
 
 {
-    "str_to_parse":"{\"card_id\":1}"
+    "str_to_parse":"{\"type\":\"like\",\"card_id\":1}"
 }
-
 
 ###
 
-POST http://127.0.0.1:8000/dislike/ddd/
+POST http://127.0.0.1:8000/like/ddd/
 Content-Type: application/json
 
 {
-    "str_to_parse":"{\"card_id\":1}"
+    "str_to_parse":"{\"type\":\"dislike\",\"card_id\":1}"
 }
 
 ###
@@ -37,4 +36,15 @@ Content-Type: application/json
     "str_to_parse":"{\"is_kulinar\":true}"
 }
 
+
+
 ###
+PUT http://91.245.227.206/updprefs/ddd/
+Content-Type: application/json
+
+{
+    "str_to_parse":"{\"is_kulinar\":true}"
+}
+
+###
+

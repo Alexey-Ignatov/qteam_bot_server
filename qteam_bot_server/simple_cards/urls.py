@@ -21,7 +21,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('updprefs/<str:bot_user_id>/', views.UpdPrefsApi.as_view(), name='apdprefs'),
     path('like/<str:bot_user_id>/', views.LikeApi.as_view(), name='like'),
-    path('dislike/<str:bot_user_id>/', views.DislikeApi.as_view(), name='dislike'),
     path('getcards/<str:bot_user_id>/', views.GetCardsApi.as_view(), name='getcards'),
     path('register/<str:bot_user_id>/', views.RegisterUser.as_view(), name='adduser'),
 ]
