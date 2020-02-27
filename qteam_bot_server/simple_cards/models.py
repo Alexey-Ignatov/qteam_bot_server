@@ -4,14 +4,14 @@ from django.db import models
 from django.db import models
 
 
-class Category(models.Model):
+class CardCategory(models.Model):
     title = models.CharField(max_length=200)
 
 class Card(models.Model):
     title = models.CharField(max_length=200)
     card_text = models.CharField(max_length=2000)
 
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    card_cat = models.ForeignKey(CardCategory, on_delete=models.CASCADE)
 
 
 

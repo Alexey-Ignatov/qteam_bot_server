@@ -25,12 +25,15 @@ SECRET_KEY = '7&&8cx7yaild3eqzb=*am4egy4s3_67=d(6-ayycq)yr)#q2xz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["91.245.227.206"]
+ALLOWED_HOSTS = ["91.245.227.206", "127.0.0.1"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'simple_cards',
+
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -99,6 +102,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
