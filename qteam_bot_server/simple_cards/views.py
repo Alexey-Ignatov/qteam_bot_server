@@ -135,8 +135,8 @@ class GetCardsApi(APIView):
 
         user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
 
-        if len(user_cats) <3:
-            Response({'answer': 'less 3 cats'})
+        if len(user_cats) < 3:
+            return Response({'answer': 'less 3 cats'})
 
         serializer = CardSerializer(Card.objects.all(), many=True)
         return Response(serializer.data)
