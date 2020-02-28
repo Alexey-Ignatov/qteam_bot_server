@@ -8,7 +8,7 @@ from rest_framework import routers, serializers, viewsets
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from .serializers import UserSerializer, GroupSerializer, CardSerializer, BotUserSerializer
-from .models import Card, CardLike, CardDislike,BotUser
+from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, CardCategory
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
@@ -139,7 +139,7 @@ class RegisterUser(APIView):
         return Response({})
 
 
-class GetStrCategories(APIView):
+class GetMyStrCategories(APIView):
     @staticmethod
     def get(request, bot_user_id):
         meta = request.META
@@ -148,23 +148,32 @@ class GetStrCategories(APIView):
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
-        res_list = []
+        user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
 
-        if bot_user.is_romantic:
-            res_list += ["Романтические идеи"]
-        if bot_user.is_sport:
-            res_list += ['Спорт']
-        if bot_user.is_kulinar:
-            res_list += ["Кулинария и настойки"]
-        if bot_user.is_instagram_lover:
-            res_list += ['Идеи Instagram']
-        if bot_user.is_edu:
-            res_list += ["Образование и личный рост"]
-        if bot_user.is_partymaker:
-            res_list += ['Идеи для вечеринок']
-
+        res_list = [cat.title for cat in user_cats]
 
         print(request.data)
         res_str = ', '.join(res_list) if res_list else "Ни одной категории не выбрано"
 
         return Response({"user_cats":res_str})
+
+
+class GetCatButtonsList(APIView):
+    @staticmethod
+    def get(request, bot_user_id):
+        meta = request.META
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+
+        btns_list = []
+        cats = CardCategory.objects.all()
+        for cat in cats:
+            btns_list.append([{'text':cat.title, "callback_data":json.dumps({'cat_id':cat.id, 'action':'on'})}])
+
+        btns_list+=[[{"text":"Посмотреть мои категории", "callback_data":"{\"show_cats\":true}"}],
+                    [{"text":"❌ Сбросить категории ❌","callback_data":"reset cats"}]]
+
+        return Response({"btns_json": btns_list})
