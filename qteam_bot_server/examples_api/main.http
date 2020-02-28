@@ -48,3 +48,13 @@ Content-Type: application/json
 
 ###
 
+GET http://127.0.0.1:8000/getmycats/ddd/
+Content-Type: application/json
+
+{
+}
+
+###
+GET http://91.245.227.206/getmycats/ddd/
+
+

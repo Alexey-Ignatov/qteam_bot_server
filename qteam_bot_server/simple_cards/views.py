@@ -137,3 +137,33 @@ class RegisterUser(APIView):
         print(request.data)
         #data_to_validate['cashbox'] = device_id
         return Response({})
+
+
+class GetStrCategories(APIView):
+    @staticmethod
+    def get(request, bot_user_id):
+        meta = request.META
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        res_list = []
+
+        if bot_user.is_romantic:
+            res_list += ["Романтические идеи"]
+        if bot_user.is_sport:
+            res_list += ['Спорт']
+        if bot_user.is_kulinar:
+            res_list += ["Кулинария и настойки"]
+        if bot_user.is_instagram_lover:
+            res_list += ['Идеи Instagram']
+        if bot_user.is_edu:
+            res_list += ["Образование и личный рост"]
+        if bot_user.is_partymaker:
+            res_list += ['Идеи для вечеринок']
+
+
+        print(request.data)
+
+        return Response({"user_cats":', '.join(res_list)})

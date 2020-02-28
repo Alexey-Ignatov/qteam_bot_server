@@ -23,6 +23,9 @@ urlpatterns = [
     path('like/<str:bot_user_id>/', views.LikeApi.as_view(), name='like'),
     path('getcards/<str:bot_user_id>/', views.GetCardsApi.as_view(), name='getcards'),
     path('register/<str:bot_user_id>/', views.RegisterUser.as_view(), name='adduser'),
+    path('getmycats/<str:bot_user_id>/', views.GetStrCategories.as_view(), name='getmycats'),
+
+
 ]
 
 
