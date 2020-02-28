@@ -33,7 +33,7 @@ PUT http://127.0.0.1:8000/updprefs/ddd/
 Content-Type: application/json
 
 {
-    "str_to_parse":"{\"is_kulinar\":true}"
+    "str_to_parse":"{\"cat_id\":2, \"action\": \"on\"}"
 }
 
 
@@ -43,7 +43,7 @@ PUT http://91.245.227.206/updprefs/ddd/
 Content-Type: application/json
 
 {
-    "str_to_parse":"{\"is_kulinar\":true}"
+    "str_to_parse":"{\"cat_id\":1, \"action\": \"on\"}"
 }
 
 ###
@@ -61,5 +61,8 @@ GET http://91.245.227.206/getmycats/ddd/
 
 ###
 GET http://127.0.0.1:8000/getbtns/ddd/
+
+###
+GET http://91.245.227.206/getbtns/ddd/
 
 ###

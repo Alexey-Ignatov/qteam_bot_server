@@ -10,10 +10,7 @@ class CardCategory(models.Model):
 class Card(models.Model):
     title = models.CharField(max_length=200)
     card_text = models.CharField(max_length=2000)
-
     card_cat = models.ForeignKey(CardCategory, on_delete=models.CASCADE)
-
-
 
 
 class BotUser(models.Model):

@@ -62,13 +62,25 @@ class UpdPrefsApi(APIView):
         try:
             bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
         except BotUser.DoesNotExist:
-            BotUser.objects.create(bot_user_id=bot_user_id)
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
-        bot_user = BotUser.objects.filter(bot_user_id=bot_user_id)
-        bot_user.update(**real_data)
+        try:
+            cat = CardCategory.objects.get(pk=real_data['cat_id'])
+        except CardCategory.DoesNotExist:
+            raise Http404
+
+        try:
+            user_cats = BotUserToCardCategory.objects.get(bot_user=bot_user, card_category=cat)
+            if real_data['action'] == 'off':
+                user_cats.delete()
+        except BotUserToCardCategory.DoesNotExist:
+            if real_data['action'] == 'on':
+                BotUserToCardCategory.objects.create(bot_user=bot_user, card_category=cat)
 
 
-        return Response(BotUserSerializer(BotUser.objects.get(bot_user_id=bot_user_id)).data)
+
+
+        return Response({})
 
         #serializer = OrderSerializer(data=data_to_validate)
 
@@ -150,7 +162,7 @@ class GetMyStrCategories(APIView):
 
         user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
 
-        res_list = [cat.title for cat in user_cats]
+        res_list = [user_2_cat.card_category.title for user_2_cat in user_cats]
 
         print(request.data)
         res_str = ', '.join(res_list) if res_list else "Ни одной категории не выбрано"
@@ -176,4 +188,4 @@ class GetCatButtonsList(APIView):
         btns_list+=[[{"text":"Посмотреть мои категории", "callback_data":"{\"show_cats\":true}"}],
                     [{"text":"❌ Сбросить категории ❌","callback_data":"reset cats"}]]
 
-        return Response({"btns_json": btns_list})
+        return Response({"btns_json": json.dumps(btns_list)})
