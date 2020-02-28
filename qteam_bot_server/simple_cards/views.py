@@ -77,20 +77,20 @@ class UpdPrefsApi(APIView):
             if real_data['action'] == 'on':
                 BotUserToCardCategory.objects.create(bot_user=bot_user, card_category=cat)
 
-
-
-
         return Response({})
 
-        #serializer = OrderSerializer(data=data_to_validate)
+class ResetPrefsApi(APIView):
 
-        #if serializer.is_valid():
-        #   with transaction.atomic():
-        #        serializer.save()
-        #        return Response(serializer.data)
+    @staticmethod
+    def get(request, bot_user_id):
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
-        #print(serializer.errors)
-        #raise ValidationError(serializer.errors)
+        BotUserToCardCategory.objects.filter(bot_user = bot_user).delete()
+
+        return Response({})
 
 
 class LikeApi(APIView):
