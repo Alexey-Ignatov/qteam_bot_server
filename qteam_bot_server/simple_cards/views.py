@@ -128,15 +128,19 @@ class GetCardsApi(APIView):
     @staticmethod
     def get(request, bot_user_id):
         meta = request.META
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
-        data_to_validate = request.data
+        user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
 
-        print(request.data)
+        if len(user_cats) <3:
+            Response({'answer': 'less 3 cats'})
 
         serializer = CardSerializer(Card.objects.all(), many=True)
         return Response(serializer.data)
-        #data_to_validate['cashbox'] = device_id
-        return Response({})
+
 
 
 class RegisterUser(APIView):
