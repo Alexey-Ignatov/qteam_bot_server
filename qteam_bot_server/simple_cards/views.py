@@ -165,5 +165,6 @@ class GetStrCategories(APIView):
 
 
         print(request.data)
+        res_str = ', '.join(res_list) if res_list else "Ни одной категории не выбрано"
 
-        return Response({"user_cats":', '.join(res_list)})
+        return Response({"user_cats":res_str})
