@@ -47,8 +47,9 @@ def get_date_btns(card_id, bot_user):
         text = dayno_2_dayname[i_datetime.weekday()] + ', '+ str(i_datetime.date().strftime("%d.%m"))
         text = 'Сегодня' if i == 0 else text
         text = 'Завтра'  if i == 1 else text
-        #TODO тут сохраняется время по таймзоне на сервере
-        btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card_id, 'date': str(i_datetime.date())})}])
+        if i in [0, 1] or i_datetime.weekday() in [4, 5, 6]:
+            #TODO тут сохраняется время по таймзоне на сервере
+            btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card_id, 'date': str(i_datetime.date())})}])
     return btns_list
 
 def index(request):
@@ -163,10 +164,10 @@ class GetCardsApi(APIView):
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
-        user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
+        #user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
 
-        if len(user_cats) < 3:
-            return Response({'answer': 'less 3 cats'})
+        #if len(user_cats) < 3:
+        #    return Response({'answer': 'less 3 cats'})
 
         serializer = CardSerializer(Card.objects.all(), many=True)
         return Response(serializer.data)
