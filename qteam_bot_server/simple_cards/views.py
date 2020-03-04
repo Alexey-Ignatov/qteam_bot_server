@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
+import datetime
 from rest_framework import authentication, permissions
 from rest_framework import routers, serializers, viewsets
 
@@ -21,7 +22,34 @@ from rest_framework.views import APIView
 from django.utils import timezone
 import json
 
+dayno_2_dayname = {
+    0:"Понедельник",
+    1: "Вторник",
+    2: "Среда",
+    3: "Четверг",
+    4: "Пятница",
+    5: "Суббота",
+    6: "Воскресенье"
 
+}
+
+dates_on_btns_num = 7
+
+
+
+def get_date_btns(card_id, bot_user):
+    btns_list = []
+    #for cat in cats:
+    #    btns_list.append([{'text': cat.title, "callback_data": json.dumps({'cat_id': cat.id, 'action': 'on'})}])
+
+    for i in range(dates_on_btns_num):
+        i_datetime = timezone.now() + datetime.timedelta(days=i)
+        text = dayno_2_dayname[i_datetime.weekday()] + ', '+ str(i_datetime.date().strftime("%d.%m"))
+        text = 'Сегодня' if i == 0 else text
+        text = 'Завтра'  if i == 1 else text
+        #TODO тут сохраняется время по таймзоне на сервере
+        btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card_id, 'date': str(i_datetime.date())})}])
+    return btns_list
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -118,7 +146,9 @@ class LikeApi(APIView):
         if real_data['type'] == 'dislike':
             CardDislike.objects.create(bot_user=bot_user, date=timezone.now(), card = card )
 
-        return Response({})
+        btns_list = get_date_btns(real_data['card_id'], bot_user)
+        return Response({"btns_json": json.dumps(btns_list)})
+        #return Response({"time":})
 
 
 
