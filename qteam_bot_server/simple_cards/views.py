@@ -23,7 +23,7 @@ from django.utils import timezone
 import json
 
 dayno_2_dayname = {
-    0:"Понедельник",
+    0: "Понедельник",
     1: "Вторник",
     2: "Среда",
     3: "Четверг",
@@ -35,6 +35,10 @@ dayno_2_dayname = {
 
 dates_on_btns_num = 7
 
+
+def upd_resp_path(bot_user, resp_path):
+    bot_user.main_resp_path = resp_path
+    bot_user.save()
 
 
 def get_date_btns(card_id, bot_user):
@@ -93,6 +97,10 @@ class UpdPrefsApi(APIView):
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
+        resp_path = request.PUT['resp_path']
+        print('resp_path', resp_path)
+        upd_resp_path(bot_user, resp_path)
+
         try:
             cat = CardCategory.objects.get(pk=real_data['cat_id'])
         except CardCategory.DoesNotExist:
@@ -117,6 +125,10 @@ class ResetPrefsApi(APIView):
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
+        resp_path = request.GET['resp_path']
+        print('resp_path', resp_path)
+        upd_resp_path(bot_user, resp_path)
+
         BotUserToCardCategory.objects.filter(bot_user = bot_user).delete()
 
         return Response({})
@@ -135,6 +147,10 @@ class LikeApi(APIView):
             bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        resp_path = request.POST['resp_path']
+        print('resp_path', resp_path)
+        upd_resp_path(bot_user, resp_path)
 
         try:
             card = Card.objects.get(pk=real_data['card_id'])
@@ -164,6 +180,10 @@ class GetCardsApi(APIView):
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
+        resp_path = request.GET['resp_path']
+        print('resp_path', resp_path)
+        upd_resp_path(bot_user, resp_path)
+
         #user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
 
         #if len(user_cats) < 3:
@@ -177,7 +197,14 @@ class GetCardsApi(APIView):
 class RegisterUser(APIView):
     @staticmethod
     def post(request, bot_user_id):
-        meta = request.META
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        resp_path = request.POST['resp_path']
+        print('resp_path', resp_path)
+        upd_resp_path(bot_user, resp_path)
 
         data_to_validate = request.data
 
@@ -194,6 +221,10 @@ class GetMyStrCategories(APIView):
             bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        resp_path = request.GET['resp_path']
+        print('resp_path', resp_path)
+        upd_resp_path(bot_user, resp_path)
 
         user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
 
@@ -213,6 +244,10 @@ class GetCatButtonsList(APIView):
             bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        resp_path = request.GET['resp_path']
+        print('resp_path', resp_path)
+        upd_resp_path(bot_user, resp_path)
 
 
         btns_list = []

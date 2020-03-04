@@ -14,7 +14,8 @@ class Card(models.Model):
 
 
 class BotUser(models.Model):
-    bot_user_id = models.CharField(max_length=30)
+    bot_user_id    = models.CharField(max_length=30)
+    main_resp_path = models.CharField(max_length=30)
 
 
 class BotUserToCardCategory(models.Model):

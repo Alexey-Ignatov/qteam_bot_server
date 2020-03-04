@@ -1,18 +1,18 @@
 # SubscriptionCreated
-POST http://127.0.0.1:8000/register/ddd/
+POST http://127.0.0.1:8000/register/ddd/?resp_path=llllhhh
 Content-Type: application/json
 {}
 
 
 
 ###
-GET http://127.0.0.1:8000/getcards/ddd/
+GET http://127.0.0.1:8000/getcards/ddd/?resp_path=llllhhh
 Content-Type: application/json
 {}
 
 ###
 ###
-POST http://127.0.0.1:8000/like/ddd/
+POST http://127.0.0.1:8000/like/ddd/?resp_path=llllhhh
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 
 ###
 
-POST http://127.0.0.1:8000/like/ddd/
+POST http://127.0.0.1:8000/like/ddd/?resp_path=llllhhh
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://127.0.0.1:8000/updprefs/ddd/
+PUT http://127.0.0.1:8000/updprefs/ddd/?resp_path=llllhhh
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 
 
 ###
-PUT http://91.245.227.206/updprefs/ddd/
+PUT http://91.245.227.206/updprefs/ddd/?resp_path=llllhhh
 Content-Type: application/json
 
 {
@@ -48,25 +48,25 @@ Content-Type: application/json
 
 ###
 
-GET http://127.0.0.1:8000/getmycats/ddd/
+GET http://127.0.0.1:8000/getmycats/ddd/?resp_path=llllhhh
 Content-Type: application/json
 
 {
 }
 
 ###
-GET http://91.245.227.206/getmycats/ddd/
+GET http://91.245.227.206/getmycats/ddd/?resp_path=llllhhh
 
 
 
 ###
-GET http://127.0.0.1:8000/getbtns/ddd/
+GET http://127.0.0.1:8000/getbtns/ddd/?resp_path=llllhhh
 
 ###
-GET http://91.245.227.206/getbtns/ddd/
+GET http://91.245.227.206/getbtns/ddd/?resp_path=llllhhh
 
 ###
 ###
-GET http://127.0.0.1:8000/resetprefs/ddd/
+GET http://127.0.0.1:8000/resetprefs/ddd/?resp_path=llllhhh
 
 ###
