@@ -335,7 +335,8 @@ class SendAddActivityApi(APIView):
 
 
         for bot_user_id, future_card_list in resppath_2_card_list.items():
-            if len(future_card_list) < 2:
+            # todo 
+            if len(future_card_list) < 200:
                 cards_liks = CardLike.objects.filter(bot_user__bot_user_id=bot_user_id).order_by('?')
                 cards = list(set([cl.card for cl in cards_liks])- set(future_card_list))
                 bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
