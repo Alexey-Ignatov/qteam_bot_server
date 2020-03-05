@@ -70,7 +70,7 @@ def get_date_btns(card, bot_user, card_dates):
         text = dayno_2_dayname[i_datetime.weekday()] + ', ' + str(i_datetime.strftime("%d.%m"))
         text = 'Сегодня'+ ', ' + str(i_datetime.strftime("%d.%m")) if i == 0 else text
         text = 'Завтра' + ', ' + str(i_datetime.strftime("%d.%m")) if i == 1 else text
-        if i in [0, 1] or i_datetime.weekday() in [4, 5, 6]:
+        if i in [0, 1] or i_datetime.weekday() in [4, 5, 6] or not card.is_always:
             #TODO тут сохраняется время по таймзоне на сервере
             btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card.id, 'date': str(i_datetime)})}])
     return btns_list
