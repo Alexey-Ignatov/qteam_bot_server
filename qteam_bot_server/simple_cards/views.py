@@ -9,7 +9,7 @@ from rest_framework import routers, serializers, viewsets
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from .serializers import UserSerializer, GroupSerializer, CardSerializer, BotUserSerializer
-from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, CardCategory
+from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, CardCategory,BookEveningEvent
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
@@ -164,6 +164,36 @@ class LikeApi(APIView):
         return Response({"btns_json": json.dumps(btns_list)})
         #return Response({"time":})
 
+
+class BookEveningApi(APIView):
+    @staticmethod
+    def post(request, bot_user_id):
+        real_data = json.loads(request.data['str_to_parse'])
+        resp_path = request.data['resp_path']
+
+        date = datetime.datetime.strptime(real_data['date'], "%Y-%m-%d").date()
+        print('date', 'date')
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        upd_resp_path(bot_user, resp_path)
+
+        try:
+            card = Card.objects.get(pk=real_data['card_id'])
+        except Card.DoesNotExist:
+            raise Http404
+
+
+        try:
+            BookEveningEvent.objects.get(bot_user=bot_user, card=card, planed_date=date)
+        except BookEveningEvent.DoesNotExist:
+            BookEveningEvent.objects.create(bot_user=bot_user, card=card, planed_date=date)
+
+
+        return Response({})
+        #return Response({"time":})
 
 
 

@@ -25,11 +25,22 @@ Content-Type: application/json
 
 ###
 
-POST http://127.0.0.1:8000/like/ddd/?resp_path=llllhhh
+POST http://127.0.0.1:8000/like/ddd/
 Content-Type: application/json
 
 {
-    "str_to_parse":"{\"type\":\"dislike\",\"card_id\":1}"
+    "str_to_parse":"{\"type\":\"dislike\",\"card_id\":1}",
+    "resp_path":"llllhhh"
+}
+
+###
+
+POST http://127.0.0.1:8000/book_evening/ddd/
+Content-Type: application/json
+
+{
+    "str_to_parse":"{\"card_id\":1,\"date\":\"2020-03-08\"}",
+    "resp_path":"llllhhh"
 }
 
 ###

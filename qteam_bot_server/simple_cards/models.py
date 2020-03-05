@@ -33,3 +33,8 @@ class CardDislike(models.Model):
     bot_user = models.ForeignKey(BotUser, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
     date = models.DateField()
+
+class BookEveningEvent(models.Model):
+    bot_user = models.ForeignKey(BotUser, on_delete=models.CASCADE)
+    card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    planed_date = models.DateField()
