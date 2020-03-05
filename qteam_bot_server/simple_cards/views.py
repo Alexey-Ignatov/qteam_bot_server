@@ -310,7 +310,7 @@ class SendFreeEveningReminderApi(APIView):
 
             send_data = {'text':"Дорогой друг! Освободи вечер, у тебя сегодня: "+ curr_card.title ,
                          "resp_path": curr_bot_user.main_resp_path,
-                         'card':CardSerializer(curr_card)}
+                         'card':CardSerializer(curr_card).data}
 
             response = requests.post(url, json=send_data)
 
