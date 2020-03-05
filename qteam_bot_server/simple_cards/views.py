@@ -301,7 +301,7 @@ class SendFreeEveningReminderApi(APIView):
 
     @staticmethod
     def get(request):
-        url = "https://flowxo.com/hooks/a/dar786w4"
+        url = "https://flowxo.com/hooks/a/d678bypz"
         curr_date = timezone.now().date()
         today_book_events = BookEveningEvent.objects.filter(planed_date=curr_date)
         for event in today_book_events:
