@@ -26,7 +26,9 @@ urlpatterns = [
     path('register/<str:bot_user_id>/', views.RegisterUser.as_view(), name='adduser'),
     path('getmycats/<str:bot_user_id>/', views.GetMyStrCategories.as_view(), name='getmycats'),
     path('getbtns/<str:bot_user_id>/', views.GetCatButtonsList.as_view(), name='getbtns'),
-    path('resetprefs/<str:bot_user_id>/', views.ResetPrefsApi.as_view(), name='reset')
+    path('resetprefs/<str:bot_user_id>/', views.ResetPrefsApi.as_view(), name='reset'),
+
+    path('sendeveningreminder/', views.SendFreeEveningReminderApi.as_view(), name='sendeveningreminder')
 
 ]
 

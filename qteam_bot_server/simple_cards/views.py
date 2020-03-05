@@ -21,6 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.utils import timezone
 import json
+import requests
 
 dayno_2_dayname = {
     0: "Понедельник",
@@ -286,3 +287,30 @@ class GetCatButtonsList(APIView):
                     [{"text":"❌ Сбросить категории ❌","callback_data":"reset cats"}]]
 
         return Response({"btns_json": json.dumps(btns_list)})
+
+
+
+
+
+
+
+
+
+
+class SendFreeEveningReminderApi(APIView):
+
+    @staticmethod
+    def get(request):
+        url = "https://flowxo.com/hooks/a/dar786w4"
+        curr_date = timezone.now().date()
+        today_book_events = BookEveningEvent.objects.filter(planed_date=curr_date)
+        for event in today_book_events:
+            curr_bot_user = event.bot_user
+            curr_card = event.card
+
+            send_data = {'text':"Дорогой друг! Освободи вечер, у тебя сегодня: "+ curr_card.title ,"resp_path": curr_bot_user.main_resp_path}
+
+            response = requests.post(url, json=send_data)
+
+        return Response({})
+        #return Response({"time":})
