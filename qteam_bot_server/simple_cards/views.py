@@ -316,3 +316,34 @@ class SendFreeEveningReminderApi(APIView):
 
         return Response({})
         #return Response({"time":})
+
+
+
+class SendAddActivityApi(APIView):
+
+    @staticmethod
+    def get(request):
+        url = "https://flowxo.com/hooks/a/2m8bd4q9"
+        curr_date = timezone.now().date()
+        today_book_events = list(BookEveningEvent.objects.filter(planed_date__gte=curr_date))
+
+        users = list(set([event.bot_user for event in today_book_events]))
+        resppath_2_card_list ={bot_user.bot_user_id:[event.card for event in today_book_events if bot_user==event.bot_user]
+                for bot_user in users}
+
+        print('resppath_2_card_list', resppath_2_card_list)
+
+
+        for bot_user_id, future_card_list in resppath_2_card_list.items():
+            if len(future_card_list) < 3:
+                cards_liks = CardLike.objects.filter(bot_user__bot_user_id=bot_user_id).order_by('?')
+                cards = list(set([cl.card for cl in cards_liks]))
+                send_data = {"resp_path": bot_user_id,
+                             'cards':CardSerializer(cards[:3], many=True).data}
+
+                print('send_data', send_data)
+
+                response = requests.post(url, json=send_data)
+
+        return Response({})
+        #return Response({"time":})

@@ -28,7 +28,8 @@ urlpatterns = [
     path('getbtns/<str:bot_user_id>/', views.GetCatButtonsList.as_view(), name='getbtns'),
     path('resetprefs/<str:bot_user_id>/', views.ResetPrefsApi.as_view(), name='reset'),
 
-    path('sendeveningreminder/', views.SendFreeEveningReminderApi.as_view(), name='sendeveningreminder')
+    path('sendeveningreminder/', views.SendFreeEveningReminderApi.as_view(), name='sendeveningreminder'),
+    path('sendaddactivity/', views.SendAddActivityApi.as_view(), name='sendaddactivity')
 
 ]
 
