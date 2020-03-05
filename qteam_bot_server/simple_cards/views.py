@@ -308,7 +308,9 @@ class SendFreeEveningReminderApi(APIView):
             curr_bot_user = event.bot_user
             curr_card = event.card
 
-            send_data = {'text':"Дорогой друг! Освободи вечер, у тебя сегодня: "+ curr_card.title ,"resp_path": curr_bot_user.main_resp_path}
+            send_data = {'text':"Дорогой друг! Освободи вечер, у тебя сегодня: "+ curr_card.title ,
+                         "resp_path": curr_bot_user.main_resp_path,
+                         'card':CardSerializer(curr_card)}
 
             response = requests.post(url, json=send_data)
 
