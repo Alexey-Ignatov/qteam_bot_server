@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
-
+import json
 
 class CardCategory(models.Model):
     title = models.CharField(max_length=200)
@@ -12,6 +12,12 @@ class Card(models.Model):
     card_text = models.CharField(max_length=2000)
     card_cat = models.ForeignKey(CardCategory, on_delete=models.CASCADE)
 
+    is_always = models.BooleanField(default=True)
+
+
+class CardDate(models.Model):
+    card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    date = models.DateField()
 
 class BotUser(models.Model):
     bot_user_id    = models.CharField(max_length=30)

@@ -19,7 +19,7 @@ POST http://127.0.0.1:8000/like/ddd/
 Content-Type: application/json
 
 {
-    "str_to_parse":"{\"type\":\"like\",\"card_id\":1}",
+    "str_to_parse":"{\"type\":\"like\",\"card_id\":3}",
     "resp_path":"llllhhh"
 }
 
@@ -95,6 +95,11 @@ GET http://127.0.0.1:8000/sendaddactivity/
 
 ###
 GET http://127.0.0.1:8000/getplans/ddd/?resp_path=llllhhh
+
+###
+GET http://127.0.0.1:8000/sendaddactivity/
+###
+
 
 
 

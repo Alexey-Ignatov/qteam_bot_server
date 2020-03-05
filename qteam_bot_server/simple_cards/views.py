@@ -9,7 +9,7 @@ from rest_framework import routers, serializers, viewsets
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from .serializers import UserSerializer, GroupSerializer, CardSerializer, BotUserSerializer
-from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, CardCategory,BookEveningEvent
+from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, CardCategory,BookEveningEvent,CardDate
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
@@ -41,20 +41,38 @@ def upd_resp_path(bot_user, resp_path):
     bot_user.main_resp_path = resp_path
     bot_user.save()
 
+def check_if_ok_to_show(card):
+    if card.is_always:
+        return True
+    horizont_datetime = timezone.now() + datetime.timedelta(days=7)
+    good_carddates = CardDate.objects.filter(date__lte=horizont_datetime,
+                                             date__gte=timezone.now().date(),
+                                             card=card)
+    print('check_if_ok_to_show:good_carddates', good_carddates)
+    if good_carddates:
+        return True
 
-def get_date_btns(card_id, bot_user):
+    return False
+
+def get_date_btns(card, bot_user, card_dates):
+    print('card_dates', card_dates)
     btns_list = []
     #for cat in cats:
     #    btns_list.append([{'text': cat.title, "callback_data": json.dumps({'cat_id': cat.id, 'action': 'on'})}])
 
     for i in range(dates_on_btns_num):
-        i_datetime = timezone.now() + datetime.timedelta(days=i)
-        text = dayno_2_dayname[i_datetime.weekday()] + ', ' + str(i_datetime.date().strftime("%d.%m"))
-        text = 'Сегодня'+ ', ' + str(i_datetime.date().strftime("%d.%m")) if i == 0 else text
-        text = 'Завтра' + ', ' + str(i_datetime.date().strftime("%d.%m")) if i == 1 else text
+        i_datetime = (timezone.now() + datetime.timedelta(days=i)).date()
+        if not card.is_always:
+            print('i_datetime', i_datetime)
+            print('card_dates', card_dates)
+            if i_datetime not in card_dates:
+                continue
+        text = dayno_2_dayname[i_datetime.weekday()] + ', ' + str(i_datetime.strftime("%d.%m"))
+        text = 'Сегодня'+ ', ' + str(i_datetime.strftime("%d.%m")) if i == 0 else text
+        text = 'Завтра' + ', ' + str(i_datetime.strftime("%d.%m")) if i == 1 else text
         if i in [0, 1] or i_datetime.weekday() in [4, 5, 6]:
             #TODO тут сохраняется время по таймзоне на сервере
-            btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card_id, 'date': str(i_datetime.date())})}])
+            btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card.id, 'date': str(i_datetime)})}])
     return btns_list
 
 def index(request):
@@ -161,7 +179,9 @@ class LikeApi(APIView):
         if real_data['type'] == 'dislike':
             CardDislike.objects.create(bot_user=bot_user, date=timezone.now(), card = card )
 
-        btns_list = get_date_btns(real_data['card_id'], bot_user)
+
+        card_dates = [card_date.date for card_date in CardDate.objects.filter(card = card)]
+        btns_list = get_date_btns(card, bot_user, card_dates)
         return Response({"btns_json": json.dumps(btns_list)})
         #return Response({"time":})
 
@@ -216,8 +236,13 @@ class GetCardsApi(APIView):
 
         #if len(user_cats) < 3:
         #    return Response({'answer': 'less 3 cats'})
+        horizont_datetime = timezone.now() + datetime.timedelta(days=7)
+        good_carddates = CardDate.objects.filter(date__lte=horizont_datetime)
+        good_date_cards = [card_date.card for card_date in good_carddates]
 
-        serializer = CardSerializer(Card.objects.all(), many=True)
+        any_date_cards = list(Card.objects.filter(is_always = True))
+
+        serializer = CardSerializer(good_date_cards+any_date_cards, many=True)
         return Response(serializer.data)
 
 
@@ -339,6 +364,8 @@ class SendAddActivityApi(APIView):
             if len(future_card_list) < 200:
                 cards_liks = CardLike.objects.filter(bot_user__bot_user_id=bot_user_id).order_by('?')
                 cards = list(set([cl.card for cl in cards_liks])- set(future_card_list))
+                cards = [card for card in cards if check_if_ok_to_show(card)]
+                print('SendAddActivityApi: cards', cards)
                 bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
 
                 send_data = {"resp_path": bot_user.main_resp_path,
