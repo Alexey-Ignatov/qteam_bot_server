@@ -1,7 +1,10 @@
 # SubscriptionCreated
-POST http://127.0.0.1:8000/register/ddd/?resp_path=llllhhh
+POST http://127.0.0.1:8000/register/ddd/
 Content-Type: application/json
-{}
+
+{
+  "resp_path":"llllhhh"
+}
 
 
 
@@ -12,11 +15,12 @@ Content-Type: application/json
 
 ###
 ###
-POST http://127.0.0.1:8000/like/ddd/?resp_path=llllhhh
+POST http://127.0.0.1:8000/like/ddd/
 Content-Type: application/json
 
 {
-    "str_to_parse":"{\"type\":\"like\",\"card_id\":1}"
+    "str_to_parse":"{\"type\":\"like\",\"card_id\":1}",
+    "resp_path":"llllhhh"
 }
 
 ###
@@ -29,21 +33,23 @@ Content-Type: application/json
 }
 
 ###
-PUT http://127.0.0.1:8000/updprefs/ddd/?resp_path=llllhhh
+PUT http://127.0.0.1:8000/updprefs/ddd/
 Content-Type: application/json
 
 {
-    "str_to_parse":"{\"cat_id\":3, \"action\": \"on\"}"
+    "str_to_parse":"{\"cat_id\":3, \"action\": \"on\"}",
+    "resp_path":"llllhhh"
 }
 
 
 
 ###
-PUT http://91.245.227.206/updprefs/ddd/?resp_path=llllhhh
+PUT http://91.245.227.206/updprefs/ddd/
 Content-Type: application/json
 
 {
-    "str_to_parse":"{\"cat_id\":1, \"action\": \"on\"}"
+    "str_to_parse":"{\"cat_id\":1, \"action\": \"on\"}",
+    "resp_path":"llllhhh"
 }
 
 ###

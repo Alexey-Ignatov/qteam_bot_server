@@ -92,13 +92,13 @@ class UpdPrefsApi(APIView):
     def put(request, bot_user_id):
         print(request.data)
         real_data = json.loads(request.data['str_to_parse'])
+        resp_path = request.data['resp_path']
         try:
             bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
-        resp_path = request.PUT['resp_path']
-        print('resp_path', resp_path)
+
         upd_resp_path(bot_user, resp_path)
 
         try:
@@ -126,7 +126,6 @@ class ResetPrefsApi(APIView):
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
         resp_path = request.GET['resp_path']
-        print('resp_path', resp_path)
         upd_resp_path(bot_user, resp_path)
 
         BotUserToCardCategory.objects.filter(bot_user = bot_user).delete()
@@ -138,18 +137,16 @@ class LikeApi(APIView):
 
     @staticmethod
     def post(request, bot_user_id):
-        print(request.data)
-        meta = request.META
-
+        print('real_data', request.data)
         real_data = json.loads(request.data['str_to_parse'])
+        resp_path = request.data['resp_path']
         print('real_data', real_data)
         try:
             bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
-        resp_path = request.POST['resp_path']
-        print('resp_path', resp_path)
+
         upd_resp_path(bot_user, resp_path)
 
         try:
@@ -202,7 +199,7 @@ class RegisterUser(APIView):
         except BotUser.DoesNotExist:
             bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
 
-        resp_path = request.POST['resp_path']
+        resp_path = request.data['resp_path']
         print('resp_path', resp_path)
         upd_resp_path(bot_user, resp_path)
 
