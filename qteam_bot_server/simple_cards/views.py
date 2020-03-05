@@ -335,7 +335,7 @@ class SendAddActivityApi(APIView):
 
 
         for bot_user_id, future_card_list in resppath_2_card_list.items():
-            # todo 
+            # todo
             if len(future_card_list) < 200:
                 cards_liks = CardLike.objects.filter(bot_user__bot_user_id=bot_user_id).order_by('?')
                 cards = list(set([cl.card for cl in cards_liks])- set(future_card_list))
@@ -349,4 +349,41 @@ class SendAddActivityApi(APIView):
                 response = requests.post(url, json=send_data)
 
         return Response({})
+        #return Response({"time":})
+
+
+class GetWeekPlansApi(APIView):
+
+    @staticmethod
+    def get(request, bot_user_id):
+        meta = request.META
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        resp_path = request.GET['resp_path']
+        upd_resp_path(bot_user, resp_path)
+
+        curr_date = timezone.now().date()
+        today_book_events = list(BookEveningEvent.objects.filter(planed_date__gte=curr_date, bot_user = bot_user))
+
+        print('today_book_events', today_book_events)
+
+        resp_list = []
+        for book_event in today_book_events:
+            text_date = dayno_2_dayname[book_event.planed_date.weekday()] + ', ' + str(book_event.planed_date.strftime("%d.%m"))
+            if book_event.planed_date == timezone.now() + datetime.timedelta(days=1):
+                text_date = "Завтра"
+
+            if book_event.planed_date == timezone.now():
+                text_date = "Сегодня"
+
+            resp_list.append({
+                'card': CardSerializer(book_event.card).data,
+                'date':text_date
+            })
+
+
+        return Response({'resp_data':resp_list})
         #return Response({"time":})

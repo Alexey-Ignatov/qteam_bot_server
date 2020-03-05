@@ -29,7 +29,8 @@ urlpatterns = [
     path('resetprefs/<str:bot_user_id>/', views.ResetPrefsApi.as_view(), name='reset'),
 
     path('sendeveningreminder/', views.SendFreeEveningReminderApi.as_view(), name='sendeveningreminder'),
-    path('sendaddactivity/', views.SendAddActivityApi.as_view(), name='sendaddactivity')
+    path('sendaddactivity/', views.SendAddActivityApi.as_view(), name='sendaddactivity'),
+    path('getplans/<str:bot_user_id>/', views.GetWeekPlansApi.as_view(), name='getplans')
 
 ]
 

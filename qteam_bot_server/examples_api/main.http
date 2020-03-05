@@ -92,9 +92,19 @@ GET http://127.0.0.1:8000/sendeveningreminder/
 ###
 GET http://127.0.0.1:8000/sendaddactivity/
 
+
+###
+GET http://127.0.0.1:8000/getplans/ddd/?resp_path=llllhhh
+
+
+
+
 ###
 GET http://91.245.227.206/sendeveningreminder/
 
 ###
 GET http://91.245.227.206/sendaddactivity/
 ###
+
+
+
