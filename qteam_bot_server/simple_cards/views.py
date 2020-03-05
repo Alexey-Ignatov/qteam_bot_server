@@ -338,7 +338,9 @@ class SendAddActivityApi(APIView):
             if len(future_card_list) < 30:
                 cards_liks = CardLike.objects.filter(bot_user__bot_user_id=bot_user_id).order_by('?')
                 cards = list(set([cl.card for cl in cards_liks]))
-                send_data = {"resp_path": bot_user_id,
+                bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+
+                send_data = {"resp_path": bot_user.main_resp_path,
                              'cards':CardSerializer(cards[:3], many=True).data}
 
                 print('send_data', send_data)
