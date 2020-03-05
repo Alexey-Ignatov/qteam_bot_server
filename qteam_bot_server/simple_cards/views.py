@@ -48,9 +48,9 @@ def get_date_btns(card_id, bot_user):
 
     for i in range(dates_on_btns_num):
         i_datetime = timezone.now() + datetime.timedelta(days=i)
-        text = dayno_2_dayname[i_datetime.weekday()] + ', '+ str(i_datetime.date().strftime("%d.%m"))
-        text = 'Сегодня' if i == 0 else text
-        text = 'Завтра'  if i == 1 else text
+        text = dayno_2_dayname[i_datetime.weekday()] + ', ' + str(i_datetime.date().strftime("%d.%m"))
+        text = 'Сегодня'+ ', ' + str(i_datetime.date().strftime("%d.%m")) if i == 0 else text
+        text = 'Завтра' + ', ' + str(i_datetime.date().strftime("%d.%m")) if i == 1 else text
         if i in [0, 1] or i_datetime.weekday() in [4, 5, 6]:
             #TODO тут сохраняется время по таймзоне на сервере
             btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card_id, 'date': str(i_datetime.date())})}])
