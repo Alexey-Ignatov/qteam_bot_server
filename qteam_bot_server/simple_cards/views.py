@@ -366,7 +366,7 @@ class GetWeekPlansApi(APIView):
         upd_resp_path(bot_user, resp_path)
 
         curr_date = timezone.now().date()
-        today_book_events = list(BookEveningEvent.objects.filter(planed_date__gte=curr_date, bot_user = bot_user)).order_by('planed_date')
+        today_book_events = list(BookEveningEvent.objects.filter(planed_date__gte=curr_date, bot_user = bot_user).order_by('planed_date'))
 
         print('today_book_events', today_book_events)
 
