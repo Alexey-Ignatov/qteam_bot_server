@@ -462,6 +462,7 @@ class GetCardsTestWebhookSenderApi(APIView):
         resp_path = '5e55159e2b23da3ecf879abf/c/733585869'
         print('cards_list', cards_list)
         for card in cards_list:
+            card.title += ' id:'+ str(card.id)
             send_data = {"resp_path": resp_path,
                          'cards': CardSerializer([card], many=True).data}
 
