@@ -456,7 +456,7 @@ class GetCardsTestWebhookSenderApi(APIView):
 
     @staticmethod
     def get(request):
-        url = "https://flowxo.com/hooks/a/7xgpxxay"
+        url = "https://flowxo.com/hooks/a/vbd5q5wp"
 
         cards_list = Card.objects.all()
         resp_path = '5e55159e2b23da3ecf879abf/c/733585869'
