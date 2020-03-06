@@ -422,7 +422,7 @@ class GetCardsApi(APIView):
         #    return Response({'answer': 'less 3 cats'})
         horizont_datetime = timezone.now() + datetime.timedelta(days=7)
         good_carddates = CardDate.objects.filter(date__lte=horizont_datetime)
-        good_date_cards = [card_date.card for card_date in good_carddates]
+        good_date_cards = list(set([card_date.card for card_date in good_carddates]))
 
         any_date_cards = list(Card.objects.filter(is_always = True))
 
