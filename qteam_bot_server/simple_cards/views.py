@@ -400,10 +400,10 @@ class GetWeekPlansApi(APIView):
         resp_list = []
         for book_event in today_book_events:
             text_date = dayno_2_dayname[book_event.planed_date.weekday()] + ', ' + str(book_event.planed_date.strftime("%d.%m"))
-            if book_event.planed_date == timezone.now() + datetime.timedelta(days=1):
+            if book_event.planed_date == (timezone.now() + datetime.timedelta(days=1)).date():
                 text_date = "Завтра"
 
-            if book_event.planed_date == timezone.now():
+            if book_event.planed_date == timezone.now().date():
                 text_date = "Сегодня"
 
             resp_list.append({
