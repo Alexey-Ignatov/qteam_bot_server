@@ -459,16 +459,17 @@ class GetCardsTestWebhookSenderApi(APIView):
         url = "https://flowxo.com/hooks/a/vbd5q5wp"
 
         cards_list = Card.objects.all()
-        resp_path = '5e55159e2b23da3ecf879abf/c/733585869'
+        resp_paths = ['5e55159e2b23da3ecf879abf/c/733585869', '5e55159e2b23da3ecf879abf/c/387056923']
         print('cards_list', cards_list)
         for card in cards_list:
             card.title += ' id:'+ str(card.id)
-            send_data = {"resp_path": resp_path,
-                         'cards': CardSerializer([card], many=True).data}
+            for resp_path in resp_paths:
+                send_data = {"resp_path": resp_path,
+                             'cards': CardSerializer([card], many=True).data}
 
-            print('send_data', send_data)
+                print('send_data', send_data)
 
-            response = requests.post(url, json=send_data)
+                response = requests.post(url, json=send_data)
             time.sleep(2)
 
         return Response({})
