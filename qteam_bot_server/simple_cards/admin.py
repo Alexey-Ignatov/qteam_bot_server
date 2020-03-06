@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import Card, CardCategory, CardDate,BookEveningEvent
+from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, CardCategory,BookEveningEvent,CardDate,DateUserCardSet
 
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
@@ -21,4 +21,28 @@ class CardDateAdmin(admin.ModelAdmin):
 @admin.register(BookEveningEvent)
 class BookEveningEventAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(CardLike)
+class CardLikeAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(CardDislike)
+class CardDislikeAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(BotUser)
+class BotUserAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(BotUserToCardCategory)
+class BotUserToCardCategoryAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(DateUserCardSet)
+class DateUserCardSetAdmin(admin.ModelAdmin):
+    pass
+
+
 

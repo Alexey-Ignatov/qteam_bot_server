@@ -44,3 +44,9 @@ class BookEveningEvent(models.Model):
     bot_user = models.ForeignKey(BotUser, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
     planed_date = models.DateField()
+
+
+class DateUserCardSet(models.Model):
+    bot_user = models.ForeignKey(BotUser, on_delete=models.CASCADE)
+    card_ids = models.CharField(max_length=300, default=json.dumps([]))
+    date = models.DateField()

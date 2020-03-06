@@ -9,7 +9,7 @@ from rest_framework import routers, serializers, viewsets
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from .serializers import UserSerializer, GroupSerializer, CardSerializer, BotUserSerializer
-from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, CardCategory,BookEveningEvent,CardDate
+from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, CardCategory,BookEveningEvent,CardDate,DateUserCardSet
 from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
@@ -22,6 +22,7 @@ from rest_framework.views import APIView
 from django.utils import timezone
 import json
 import requests
+from random import shuffle
 
 dayno_2_dayname = {
     0: "Понедельник",
@@ -218,34 +219,6 @@ class BookEveningApi(APIView):
 
 
 
-class GetCardsApi(APIView):
-
-    @staticmethod
-    def get(request, bot_user_id):
-        meta = request.META
-        try:
-            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
-        except BotUser.DoesNotExist:
-            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
-
-        resp_path = request.GET['resp_path']
-        print('resp_path', resp_path)
-        upd_resp_path(bot_user, resp_path)
-
-        #user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
-
-        #if len(user_cats) < 3:
-        #    return Response({'answer': 'less 3 cats'})
-        horizont_datetime = timezone.now() + datetime.timedelta(days=7)
-        good_carddates = CardDate.objects.filter(date__lte=horizont_datetime)
-        good_date_cards = [card_date.card for card_date in good_carddates]
-
-        any_date_cards = list(Card.objects.filter(is_always = True))
-
-        serializer = CardSerializer(good_date_cards+any_date_cards, many=True)
-        return Response(serializer.data)
-
-
 
 class RegisterUser(APIView):
     @staticmethod
@@ -414,3 +387,59 @@ class GetWeekPlansApi(APIView):
 
         return Response({'resp_data':resp_list})
         #return Response({"time":})
+
+
+
+
+class GetCardsApi(APIView):
+
+    @staticmethod
+    def get(request, bot_user_id):
+        meta = request.META
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        resp_path = request.GET['resp_path']
+        upd_resp_path(bot_user, resp_path)
+
+        try:
+            date_user_card_set = DateUserCardSet.objects.get(bot_user=bot_user, date=datetime.datetime.now().date())
+            card_id_list = json.loads(date_user_card_set.card_ids)
+            res_cards = Card.objects.filter(pk__in=card_id_list)
+            serializer = CardSerializer(res_cards, many=True)
+            print("print from try")
+            return Response(serializer.data)
+        except DateUserCardSet.DoesNotExist:
+            pass
+            #bot_user = DateUserCardSet.objects.create(bot_user_id=bot_user_id)
+
+        #user_cats = BotUserToCardCategory.objects.filter(bot_user = bot_user)
+
+        #if len(user_cats) < 3:
+        #    return Response({'answer': 'less 3 cats'})
+        horizont_datetime = timezone.now() + datetime.timedelta(days=7)
+        good_carddates = CardDate.objects.filter(date__lte=horizont_datetime)
+        good_date_cards = [card_date.card for card_date in good_carddates]
+
+        any_date_cards = list(Card.objects.filter(is_always = True))
+
+        user_oblivious_card_list = good_date_cards+any_date_cards
+
+        liked_cards = [like.card for like in CardLike.objects.filter(bot_user=bot_user)]
+        disliked_cards = [like.card for like in CardDislike.objects.filter(bot_user=bot_user)]
+        print('user_oblivious_card_list', user_oblivious_card_list)
+        print('liked_cards', liked_cards)
+        print('disliked_cards', disliked_cards)
+
+        res_cards = [card for card in user_oblivious_card_list if card not in liked_cards + disliked_cards]
+        print('user_oblivious_card_list', user_oblivious_card_list)
+        shuffle(res_cards)
+        res_cards = res_cards[:5]
+
+        res_cards_ids = [card.id for card in res_cards]
+        DateUserCardSet.objects.create(bot_user=bot_user, date=datetime.datetime.now().date(), card_ids=json.dumps(res_cards_ids))
+        serializer = CardSerializer(res_cards, many=True)
+        print("print from end")
+        return Response(serializer.data)
