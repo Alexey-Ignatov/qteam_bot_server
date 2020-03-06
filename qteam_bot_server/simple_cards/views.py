@@ -23,6 +23,7 @@ from django.utils import timezone
 import json
 import requests
 from random import shuffle
+import time
 
 dayno_2_dayname = {
     0: "Понедельник",
@@ -443,3 +444,31 @@ class GetCardsApi(APIView):
         serializer = CardSerializer(res_cards, many=True)
         print("print from end")
         return Response(serializer.data)
+
+
+
+
+
+
+
+#class GetCardsTestWebhookSenderApi(APIView):
+class GetCardsTestWebhookSenderApi(APIView):
+
+    @staticmethod
+    def get(request):
+        url = "https://flowxo.com/hooks/a/7xgpxxay"
+
+        cards_list = Card.objects.all()
+        resp_path = '5e55159e2b23da3ecf879abf/c/733585869'
+        print('cards_list', cards_list)
+        for card in cards_list:
+            send_data = {"resp_path": resp_path,
+                         'cards': CardSerializer([card], many=True).data}
+
+            print('send_data', send_data)
+
+            response = requests.post(url, json=send_data)
+            time.sleep(2)
+
+        return Response({})
+        # return Response({"time":})
