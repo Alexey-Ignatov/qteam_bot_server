@@ -46,7 +46,7 @@ def upd_resp_path(bot_user, resp_path):
 def check_if_ok_to_show(card):
     if card.is_always:
         return True
-    horizont_datetime = timezone.now() + datetime.timedelta(days=7)
+    horizont_datetime = timezone.now() + datetime.timedelta(days=7) + datetime.timedelta(hours=3)
     good_carddates = CardDate.objects.filter(date__lte=horizont_datetime,
                                              date__gte=timezone.now().date(),
                                              card=card)
@@ -63,7 +63,7 @@ def get_date_btns(card, bot_user, card_dates):
     #    btns_list.append([{'text': cat.title, "callback_data": json.dumps({'cat_id': cat.id, 'action': 'on'})}])
 
     for i in range(dates_on_btns_num):
-        i_datetime = (timezone.now() + datetime.timedelta(days=i)).date()
+        i_datetime = (timezone.now() + datetime.timedelta(days=i)+ datetime.timedelta(hours=3)).date()
         if not card.is_always:
             print('i_datetime', i_datetime)
             print('card_dates', card_dates)
@@ -176,10 +176,10 @@ class LikeApi(APIView):
             raise Http404
 
         if real_data['type'] == 'like':
-            CardLike.objects.create(bot_user=bot_user, date=timezone.now(), card = card )
+            CardLike.objects.create(bot_user=bot_user, date=timezone.now()+ datetime.timedelta(hours=3), card = card )
 
         if real_data['type'] == 'dislike':
-            CardDislike.objects.create(bot_user=bot_user, date=timezone.now(), card = card )
+            CardDislike.objects.create(bot_user=bot_user, date=timezone.now()+ datetime.timedelta(hours=3), card = card )
 
 
         card_dates = [card_date.date for card_date in CardDate.objects.filter(card = card)]
@@ -301,7 +301,7 @@ class SendFreeEveningReminderApi(APIView):
     @staticmethod
     def get(request):
         url = "https://flowxo.com/hooks/a/d678bypz"
-        curr_date = timezone.now().date()
+        curr_date = (timezone.now() + datetime.timedelta(hours=3)).date()
         today_book_events = BookEveningEvent.objects.filter(planed_date=curr_date)
         for event in today_book_events:
             curr_bot_user = event.bot_user
@@ -323,7 +323,7 @@ class SendAddActivityApi(APIView):
     @staticmethod
     def get(request):
         url = "https://flowxo.com/hooks/a/2m8bd4q9"
-        curr_date = timezone.now().date()
+        curr_date = (timezone.now() + datetime.timedelta(hours=3)).date()
         today_book_events = list(BookEveningEvent.objects.filter(planed_date__gte=curr_date))
 
         users = list(set([event.bot_user for event in today_book_events]))
@@ -366,7 +366,7 @@ class GetWeekPlansApi(APIView):
         resp_path = request.GET['resp_path']
         upd_resp_path(bot_user, resp_path)
 
-        curr_date = timezone.now().date()
+        curr_date = (timezone.now() + datetime.timedelta(hours=3)).date()
         today_book_events = list(BookEveningEvent.objects.filter(planed_date__gte=curr_date, bot_user = bot_user).order_by('planed_date'))
 
         print('today_book_events', today_book_events)
@@ -374,10 +374,10 @@ class GetWeekPlansApi(APIView):
         resp_list = []
         for book_event in today_book_events:
             text_date = dayno_2_dayname[book_event.planed_date.weekday()] + ', ' + str(book_event.planed_date.strftime("%d.%m"))
-            if book_event.planed_date == (timezone.now() + datetime.timedelta(days=1)).date():
+            if book_event.planed_date == (timezone.now() + datetime.timedelta(days=1) + datetime.timedelta(hours=3)).date():
                 text_date = "Завтра"
 
-            if book_event.planed_date == timezone.now().date():
+            if book_event.planed_date == (timezone.now()+datetime.timedelta(hours=3)).date():
                 text_date = "Сегодня"
 
             resp_list.append({
@@ -406,7 +406,7 @@ class GetCardsApi(APIView):
         upd_resp_path(bot_user, resp_path)
 
         try:
-            date_user_card_set = DateUserCardSet.objects.get(bot_user=bot_user, date=datetime.datetime.now().date())
+            date_user_card_set = DateUserCardSet.objects.get(bot_user=bot_user, date=(datetime.datetime.now() + datetime.timedelta(hours=3)).date())
             card_id_list = json.loads(date_user_card_set.card_ids)
             res_cards = Card.objects.filter(pk__in=card_id_list)
             serializer = CardSerializer(res_cards, many=True)
@@ -420,7 +420,7 @@ class GetCardsApi(APIView):
 
         #if len(user_cats) < 3:
         #    return Response({'answer': 'less 3 cats'})
-        horizont_datetime = timezone.now() + datetime.timedelta(days=7)
+        horizont_datetime = timezone.now() + datetime.timedelta(days=7) + datetime.timedelta(hours=3)
         good_carddates = CardDate.objects.filter(date__lte=horizont_datetime)
         good_date_cards = list(set([card_date.card for card_date in good_carddates]))
 
@@ -440,7 +440,7 @@ class GetCardsApi(APIView):
         res_cards = res_cards[:5]
 
         res_cards_ids = [card.id for card in res_cards]
-        DateUserCardSet.objects.create(bot_user=bot_user, date=datetime.datetime.now().date(), card_ids=json.dumps(res_cards_ids))
+        DateUserCardSet.objects.create(bot_user=bot_user, date=(datetime.datetime.now() + datetime.timedelta(hours=3)).date(), card_ids=json.dumps(res_cards_ids))
         serializer = CardSerializer(res_cards, many=True)
         print("print from end")
         return Response(serializer.data)
