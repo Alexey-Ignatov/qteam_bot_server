@@ -37,7 +37,7 @@ class BotUser(models.Model):
     main_resp_path = models.CharField(max_length=30)
 
     def __str__(self):
-        return self.id + ' '+  self.bot_user_id
+        return str(self.id) + ' '+  str(self.bot_user_id)
 
 
 class BotUserToCardCategory(models.Model):
@@ -45,7 +45,7 @@ class BotUserToCardCategory(models.Model):
     card_category = models.ForeignKey(CardCategory, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.bot_user + self.card_category
+        return str(self.bot_user.bot_user_id) + self.card_category
 
 
 class CardLike(models.Model):
@@ -71,7 +71,7 @@ class BookEveningEvent(models.Model):
     planed_date = models.DateField()
 
     def __str__(self):
-        return self.card
+        return self.card.title
 
 
 class DateUserCardSet(models.Model):
@@ -80,4 +80,4 @@ class DateUserCardSet(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return self.bot_user + ' ' + self.card_ids
+        return str(self.bot_user.bot_user_id) + ' ' + self.card_ids
