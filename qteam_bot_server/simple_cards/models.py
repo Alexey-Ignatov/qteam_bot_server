@@ -45,7 +45,7 @@ class BotUserToCardCategory(models.Model):
     card_category = models.ForeignKey(CardCategory, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.bot_user.bot_user_id) + self.card_category
+        return str(self.bot_user.bot_user_id) + self.card_category.title
 
 
 class CardLike(models.Model):
