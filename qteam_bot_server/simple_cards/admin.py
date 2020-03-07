@@ -6,7 +6,21 @@ from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, C
 
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
-    pass
+    list_display= ('title', 'num_likes', 'num_dislikes')
+
+
+    def num_likes(self, obj):
+        likes = CardLike.objects.filter(card=obj)
+        return len(set([like.bot_user for like in likes]))
+
+    def num_dislikes(self, obj):
+        likes = CardDislike.objects.filter(card=obj)
+        return len(set([like.bot_user for like in likes]))
+    #fields = ('title', 'num_likes')
+
+
+
+
 
 
 @admin.register(CardCategory)
@@ -43,6 +57,10 @@ class BotUserToCardCategoryAdmin(admin.ModelAdmin):
 @admin.register(DateUserCardSet)
 class DateUserCardSetAdmin(admin.ModelAdmin):
     pass
+
+
+
+
 
 
 
