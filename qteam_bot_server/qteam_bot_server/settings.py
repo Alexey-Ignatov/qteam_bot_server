@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'qteam_bot_server.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'qteam_bot_server',
+        'USER': 'qteam_bot_user',
+        'PASSWORD': 'qteam_bot_user_password',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
