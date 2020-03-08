@@ -513,6 +513,7 @@ class GetWeekendSchedule(APIView):
 
 
         plans_by_date = []
+        btns_list = []
         final_text = "*Ваши планы на ближайшие выходные:*\n"
         for date_dict in dates_list:
             day_plans_text_list = []
@@ -530,14 +531,22 @@ class GetWeekendSchedule(APIView):
             final_text += curr_plan['date_text'] + ": " + (curr_plan['plans_text'] if  curr_plan['plans_text'] \
                                                             else "Ничего не запланировано") + '\n'
 
+            btns_list.append([{'text': curr_plan['date_text'],
+                               "callback_data": json.dumps({'type': "bet_on_date", 'date': str(curr_plan['date'])})}])
+
 
         # plans_by_date to text
 
 
 
+
         return Response({
                         "text": final_text,
-                        "parse_mode": "Markdown"
+                        "parse_mode": "Markdown",
+                        "reply_markup": {
+                                "inline_keyboard": btns_list
+
+                            }
                         })
 
 

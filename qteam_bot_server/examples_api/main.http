@@ -103,8 +103,8 @@ GET http://127.0.0.1:8000/sendaddactivity/
 GET http://127.0.0.1:8000/getweekendschedule/ddd/?resp_path=llllhhh
 
 
-
-
+###
+GET http://91.245.227.206/getweekendschedule/ddd/?resp_path=llllhhh
 
 
 
