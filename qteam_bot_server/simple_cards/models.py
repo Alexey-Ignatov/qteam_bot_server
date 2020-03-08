@@ -33,8 +33,8 @@ class CardDate(models.Model):
         return self.card.title + " " + str(self.date)
 
 class BotUser(models.Model):
-    bot_user_id    = models.CharField(max_length=30)
-    main_resp_path = models.CharField(max_length=30)
+    bot_user_id    = models.CharField(max_length=100)
+    main_resp_path = models.CharField(max_length=100)
 
     def __str__(self):
         return str(self.id) + ' '+  str(self.bot_user_id)
