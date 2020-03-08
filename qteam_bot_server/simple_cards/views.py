@@ -537,7 +537,7 @@ class GetWeekendSchedule(APIView):
 
         # plans_by_date to text
 
-
+        final_text += "\nНажмите кнопку, чтобы получить активности на дату!"
 
 
         return Response({
