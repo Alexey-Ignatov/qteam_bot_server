@@ -20,6 +20,7 @@ class Card(models.Model):
     card_cat = models.ForeignKey(CardCategory, on_delete=models.CASCADE)
 
     is_always = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
