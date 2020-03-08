@@ -77,6 +77,24 @@ def get_date_btns(card, bot_user, card_dates):
             btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card.id, 'date': str(i_datetime)})}])
     return btns_list
 
+
+def get_next_weekend_and_names():
+    res_list = []
+    curr_time = timezone.now() +  datetime.timedelta(hours=3)
+    for i in range(7):
+        i_date = (curr_time + datetime.timedelta(days=i)).date()
+        if i_date.weekday() not in [4, 5, 6]:
+            continue
+
+        text = dayno_2_dayname[i_date.weekday()] + ', ' + str(i_date.strftime("%d.%m"))
+        text = 'Сегодня'+ ', ' + str(i_date.strftime("%d.%m")) if i == 0 else text
+        text = 'Завтра' + ', ' + str(i_date.strftime("%d.%m")) if i == 1 else text
+        res_list.append({'date':i_date, 'date_text':text})
+    return res_list
+
+
+
+
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -474,3 +492,52 @@ class GetCardsTestWebhookSenderApi(APIView):
 
         return Response({})
         # return Response({"time":})
+
+
+
+class GetWeekendSchedule(APIView):
+
+    @staticmethod
+    def get(request, bot_user_id):
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        resp_path = request.GET['resp_path']
+        upd_resp_path(bot_user, resp_path)
+
+
+        dates_list = get_next_weekend_and_names()
+        print(dates_list)
+
+
+        plans_by_date = []
+        final_text = "*Ваши планы на ближайшие выходные:*\n"
+        for date_dict in dates_list:
+            day_plans_text_list = []
+            day_book_events = BookEveningEvent.objects.filter(planed_date=date_dict['date'], bot_user=bot_user)
+            for event in day_book_events:
+                day_plans_text_list.append(event.card.title)
+
+            curr_plan = {
+                'date':date_dict['date'],
+                'date_text':date_dict['date_text'],
+                'plans_text': ", ".join(day_plans_text_list)
+            }
+            plans_by_date.append(curr_plan)
+
+            final_text += curr_plan['date_text'] + ": " + (curr_plan['plans_text'] if  curr_plan['plans_text'] \
+                                                            else "Ничего не запланировано") + '\n'
+
+
+        # plans_by_date to text
+
+
+
+        return Response({
+                        "text": final_text,
+                        "parse_mode": "Markdown"
+                        })
+
+

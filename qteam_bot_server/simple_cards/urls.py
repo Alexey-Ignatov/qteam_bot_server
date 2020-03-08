@@ -34,7 +34,7 @@ urlpatterns = [
 
 
     path('testallcards/', views.GetCardsTestWebhookSenderApi.as_view(), name='testallcards'),
-
+    path('getweekendschedule/<str:bot_user_id>/', views.GetWeekendSchedule.as_view(), name='getweekendschedule'),
 
 ]
 
