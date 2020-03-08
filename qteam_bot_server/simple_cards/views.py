@@ -532,7 +532,7 @@ class GetWeekendSchedule(APIView):
                                                             else "Ничего не запланировано") + '\n'
 
             btns_list.append([{'text': curr_plan['date_text'],
-                               "callback_data": json.dumps({'type': "bet_on_date", 'date': str(curr_plan['date'])})}])
+                               "callback_data": json.dumps({'type':"get_on_date", 'date': str(curr_plan['date'])})}])
 
 
         # plans_by_date to text
@@ -550,3 +550,26 @@ class GetWeekendSchedule(APIView):
                         })
 
 
+
+
+
+class GetCardsOnDateApi(APIView):
+
+    @staticmethod
+    def get(request, bot_user_id):
+        real_data = json.loads(request.data['str_to_parse'])
+        resp_path = request.data['resp_path']
+
+        date = datetime.datetime.strptime(real_data['date'], "%Y-%m-%d").date()
+        print('date', date)
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        upd_resp_path(bot_user, resp_path)
+
+
+        cards = list(Card.objects.all())[:5]
+        serializer = CardSerializer(cards, many=True)
+        return Response(serializer.data)
