@@ -3,10 +3,12 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, CardCategory,BookEveningEvent,CardDate,DateUserCardSet
+import json
+
 
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
-    list_display= ('title', 'num_likes', 'num_dislikes', 'is_active')
+    list_display= ('title', 'num_likes', 'num_dislikes', 'is_active', 'num_shows')
 
 
     def num_likes(self, obj):
@@ -16,6 +18,10 @@ class CardAdmin(admin.ModelAdmin):
     def num_dislikes(self, obj):
         likes = CardDislike.objects.filter(card=obj)
         return len(set([like.bot_user for like in likes]))
+
+    def num_shows(self, obj):
+        sets = DateUserCardSet.objects.all()
+        return len([True for el in sets if obj.id in json.loads(el.card_ids)])
     #fields = ('title', 'num_likes')
 
 
