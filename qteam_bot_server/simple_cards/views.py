@@ -421,12 +421,13 @@ class GetCardsApi(APIView):
         #if len(user_cats) < 3:
         #    return Response({'answer': 'less 3 cats'})
         horizont_datetime = timezone.now() + datetime.timedelta(days=7) + datetime.timedelta(hours=3)
-        good_carddates = CardDate.objects.filter(date__lte=horizont_datetime, is_active=True)
+        good_carddates = CardDate.objects.filter(date__lte=horizont_datetime)
         good_date_cards = list(set([card_date.card for card_date in good_carddates]))
 
-        any_date_cards = list(Card.objects.filter(is_always = True, is_active=True))
+        any_date_cards = list(Card.objects.filter(is_always = True))
 
         user_oblivious_card_list = good_date_cards+any_date_cards
+        user_oblivious_card_list = [el for el in user_oblivious_card_list if el.is_active]
 
         liked_cards = [like.card for like in CardLike.objects.filter(bot_user=bot_user)]
         disliked_cards = [like.card for like in CardDislike.objects.filter(bot_user=bot_user)]
