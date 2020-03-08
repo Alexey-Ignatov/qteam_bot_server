@@ -6,7 +6,7 @@ from .models import Card, CardLike, CardDislike,BotUser,BotUserToCardCategory, C
 
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
-    list_display= ('title', 'num_likes', 'num_dislikes')
+    list_display= ('title', 'num_likes', 'num_dislikes', 'is_active')
 
 
     def num_likes(self, obj):
