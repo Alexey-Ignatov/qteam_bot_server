@@ -9,7 +9,7 @@ Content-Type: application/json
 
 
 ###
-GET http://127.0.0.1:8000/getcards/ddd/?resp_path=llllhhh
+GET http://127.0.0.1:8000/getcards/733585869/?resp_path=5e55159e2b23da3ecf879abf/c/733585869
 Content-Type: application/json
 {}
 

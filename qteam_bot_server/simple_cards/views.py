@@ -75,6 +75,28 @@ def upd_resp_path(bot_user, resp_path):
     bot_user.save()
 
 
+def get_card_message_telegram_req(card, date_dict =None,likes_btns=True):
+    text ="*{}* \n{}".format(card.title, card.card_text)
+
+    btns_lines = []
+    if likes_btns:
+        likes_btns =[
+            {"text": "👍",
+             "callback_data": json.dumps({'card_id': card.id, 'type': 'like'})},
+            {"text": "👎",
+             "callback_data": json.dumps({'card_id': card.id, 'type': 'dislike'})}
+        ]
+        btns_lines.append(likes_btns)
+    if date_dict:
+        book_btns = [
+            {'text': date_dict['date_text'], "callback_data": json.dumps({'card_id': card.id, 'date': str(date_dict['date'])})}
+        ]
+        btns_lines.append(book_btns)
+
+    return {"text":text,
+            "parse_mode": "Markdown",
+            "reply_markup": {"inline_keyboard":btns_lines}}
+
 
 def get_date_btns(card, bot_user, card_dates):
     print('card_dates', card_dates)
@@ -120,15 +142,12 @@ def get_next_weekend_and_names():
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
-
-
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -328,14 +347,6 @@ class GetCatButtonsList(APIView):
         return Response({"btns_json": json.dumps(btns_list)})
 
 
-
-
-
-
-
-
-
-
 class SendFreeEveningReminderApi(APIView):
 
     @staticmethod
@@ -451,9 +462,10 @@ class GetCardsApi(APIView):
             date_user_card_set = DateUserCardSet.objects.get(bot_user=bot_user, date=(datetime.datetime.now() + datetime.timedelta(hours=3)).date())
             card_id_list = json.loads(date_user_card_set.card_ids)
             res_cards = Card.objects.filter(pk__in=card_id_list)
-            serializer = CardSerializer(res_cards, many=True)
+            #serializer = CardSerializer(res_cards, many=True)
             print("print from try")
-            return Response(serializer.data)
+            #return Response(serializer.data)
+            return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards]})
         except DateUserCardSet.DoesNotExist:
             pass
             #bot_user = DateUserCardSet.objects.create(bot_user_id=bot_user_id)
@@ -472,9 +484,12 @@ class GetCardsApi(APIView):
 
         res_cards_ids = [card.id for card in res_cards]
         DateUserCardSet.objects.create(bot_user=bot_user, date=(datetime.datetime.now() + datetime.timedelta(hours=3)).date(), card_ids=json.dumps(res_cards_ids))
-        serializer = CardSerializer(res_cards, many=True)
 
-        return Response(serializer.data)
+
+        #serializer = CardSerializer(res_cards, many=True)
+        #return Response(serializer.data)
+
+        return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards]})
 
 
 
