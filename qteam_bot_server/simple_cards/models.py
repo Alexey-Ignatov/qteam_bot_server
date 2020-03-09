@@ -19,7 +19,7 @@ class CardCategory(models.Model):
 class Card(models.Model):
     is_active = models.BooleanField(default=True)
     title = models.CharField(max_length=200)
-    card_text = models.CharField(max_length=2000)
+    card_text = models.TextField(max_length=2000)
     card_cat = models.ForeignKey(CardCategory, on_delete=models.CASCADE)
 
     is_special_dates = models.BooleanField(default=False)
