@@ -3,6 +3,8 @@ from django.db import models
 # Create your models here.
 from django.db import models
 import json
+from django.utils import timezone
+import datetime
 
 class CardCategory(models.Model):
     title = models.CharField(max_length=200)
@@ -15,12 +17,16 @@ class CardCategory(models.Model):
 
 
 class Card(models.Model):
+    is_active = models.BooleanField(default=True)
     title = models.CharField(max_length=200)
     card_text = models.CharField(max_length=2000)
     card_cat = models.ForeignKey(CardCategory, on_delete=models.CASCADE)
 
-    is_always = models.BooleanField(default=True)
-    is_active = models.BooleanField(default=True)
+    is_special_dates = models.BooleanField(default=False)
+
+    date_ends = models.DateField()
+    date_starts = models.DateField()
+
 
     def __str__(self):
         return self.title

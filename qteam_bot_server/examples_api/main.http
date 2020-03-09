@@ -107,7 +107,7 @@ GET http://127.0.0.1:8000/getweekendschedule/ddd/?resp_path=llllhhh
 GET http://127.0.0.1:8000/getcardsondate/ddd/?resp_path=llllhhh
 
 {
-    "str_to_parse":"{\"type\":\"bet_on_date\",\"date\":\"2020-03-05\"}",
+    "str_to_parse":"{\"type\":\"get_on_date\",\"date\":\"2020-03-05\"}",
     "resp_path":"llllhhh"
 }
 
