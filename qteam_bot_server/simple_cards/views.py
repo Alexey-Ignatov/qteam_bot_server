@@ -357,7 +357,7 @@ class SendFreeEveningReminderApi(APIView):
         for event in today_book_events:
             curr_bot_user = event.bot_user
             curr_card = event.card
-
+            #todo use get_telega_req
             send_data = {'text':"Дорогой друг! Освободи вечер, у тебя сегодня: "+ curr_card.title ,
                          "resp_path": curr_bot_user.main_resp_path,
                          'card':CardSerializer(curr_card).data}
@@ -465,7 +465,8 @@ class GetCardsApi(APIView):
             #serializer = CardSerializer(res_cards, many=True)
             print("print from try")
             #return Response(serializer.data)
-            return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards]})
+            return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards],
+                             'req_count': len(res_cards) })
         except DateUserCardSet.DoesNotExist:
             pass
             #bot_user = DateUserCardSet.objects.create(bot_user_id=bot_user_id)
@@ -489,7 +490,8 @@ class GetCardsApi(APIView):
         #serializer = CardSerializer(res_cards, many=True)
         #return Response(serializer.data)
 
-        return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards]})
+        return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards],
+                         'req_count': len(res_cards) })
 
 
 
