@@ -104,15 +104,14 @@ GET http://127.0.0.1:8000/getweekendschedule/ddd/?resp_path=llllhhh
 
 
 ###
-GET http://127.0.0.1:8000/getcardsondate/ddd/?resp_path=llllhhh
+GET http://127.0.0.1:8000/getcardsondate/733585869/?resp_path=5e55159e2b23da3ecf879abf/c/733585869
 
 {
-    "str_to_parse":"{\"type\":\"get_on_date\",\"date\":\"2020-03-05\"}",
-    "resp_path":"llllhhh"
+    "str_to_parse":"{\"type\":\"get_on_date\",\"date\":\"2020-03-05\"}"
 }
 
 ###
-GET http://91.245.227.206/getweekendschedule/ddd/?resp_path=llllhhh
+GET http://91.245.227.206/getweekendschedule/733585869/?resp_path=5e55159e2b23da3ecf879abf/c/733585869
 
 
 

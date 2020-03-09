@@ -582,6 +582,19 @@ class GetWeekendSchedule(APIView):
 
 #def get
 
+def get_cards_set_summary_telegram_req(cards_list):
+    text ="Выберете развлечение для более подробного просмотра"
+
+    btns_lines =[]
+    for card in cards_list:
+        btns_lines.append(
+            [{"text": card.title,
+              "callback_data": json.dumps({'card_id': card.id, 'type': 'show'})}]
+        )
+
+    return {"text":text,
+            "parse_mode": "Markdown",
+            "reply_markup": {"inline_keyboard":btns_lines}}
 
 
 class GetCardsOnDateApi(APIView):
@@ -589,7 +602,7 @@ class GetCardsOnDateApi(APIView):
     @staticmethod
     def get(request, bot_user_id):
         real_data = json.loads(request.data['str_to_parse'])
-        resp_path = request.data['resp_path']
+        resp_path = request.GET['resp_path']
 
         date = datetime.datetime.strptime(real_data['date'], "%Y-%m-%d").date()
         print('date', date)
@@ -608,5 +621,6 @@ class GetCardsOnDateApi(APIView):
         shuffle(res_cards)
         res_cards = res_cards[:5]
 
-        return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards],
-                         'req_count': len(res_cards) })
+        #return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards],
+        #                 'req_count': len(res_cards) })
+        return Response({"telegram_req":get_cards_set_summary_telegram_req(res_cards)})
