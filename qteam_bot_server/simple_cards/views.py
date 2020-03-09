@@ -608,6 +608,5 @@ class GetCardsOnDateApi(APIView):
         shuffle(res_cards)
         res_cards = res_cards[:5]
 
-        serializer = CardSerializer(res_cards, many=True)
-
-        return Response(serializer.data)
+        return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards],
+                         'req_count': len(res_cards) })
