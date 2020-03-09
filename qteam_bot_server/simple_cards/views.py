@@ -36,6 +36,7 @@ dayno_2_dayname = {
 
 }
 
+datetime.datetime.strptime("2019-01-01", "%Y-%m-%d").date()
 dates_on_btns_num = 7
 
 def get_cards_ok_to_show(individual_stop_list=[]):
@@ -582,8 +583,14 @@ class GetCardsOnDateApi(APIView):
 
         upd_resp_path(bot_user, resp_path)
 
+        liked_cards = [like.card for like in CardLike.objects.filter(bot_user=bot_user)]
+        disliked_cards = [like.card for like in CardDislike.objects.filter(bot_user=bot_user)]
 
+        res_cards = get_cards_ok_to_show_on_date(date,individual_stop_list=liked_cards+disliked_cards)
 
-        cards = list(Card.objects.all())[:5]
-        serializer = CardSerializer(cards, many=True)
+        shuffle(res_cards)
+        res_cards = res_cards[:5]
+
+        serializer = CardSerializer(res_cards, many=True)
+
         return Response(serializer.data)
