@@ -118,7 +118,7 @@ def get_date_btns(card, bot_user, card_dates):
                 or i_datetime.weekday() in [4, 5, 6] \
                 or card.is_special_dates:
             #TODO тут сохраняется время по таймзоне на сервере
-            btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card.id, 'date': str(i_datetime)})}])
+            btns_list.append([{'text': text, "callback_data": json.dumps({'card_id': card.id, 'date': str(i_datetime), 'type':'book'})}])
     return btns_list
 
 
