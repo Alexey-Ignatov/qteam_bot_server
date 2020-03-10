@@ -571,7 +571,7 @@ class GetWeekendSchedule(APIView):
             plans_by_date.append(curr_plan)
 
             final_text += '*{}*'.format("🗓" + curr_plan['date_text'] + ": ") + (curr_plan['plans_text'] if curr_plan['plans_text'] \
-                                                            else "Ничего не запланировано") + '\n'
+                                                            else "Ничего не запланировано") + '\n\n'
 
             btns_list.append([{'text': "🔎 "+ curr_plan['date_text'],
                                "callback_data": json.dumps({'type':"get_on_date", 'date': str(curr_plan['date'])})}])
