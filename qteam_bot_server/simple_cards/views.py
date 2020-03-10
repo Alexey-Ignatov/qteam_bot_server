@@ -558,8 +558,8 @@ class GetWeekendSchedule(APIView):
                 day_plans_text_list.append(event.card.title)
 
             curr_plan = {
-                'date':"🗓" + date_dict['date'],
-                'date_text':date_dict['date_text'],
+                'date': date_dict['date'],
+                'date_text': "🗓"+date_dict['date_text'],
                 'plans_text': ",\n".join(day_plans_text_list)
             }
             plans_by_date.append(curr_plan)
