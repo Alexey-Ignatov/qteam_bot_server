@@ -595,7 +595,7 @@ def get_cards_set_summary_telegram_req(cards_list, date_dict):
     for card in cards_list:
         btns_lines.append(
             [{"text": card.title,
-              "callback_data": json.dumps({'card_id': card.id, 'type': 'show_certain_card', 'date':str(date_dict['date'])})}]
+              "callback_data": json.dumps({'card_id': card.id, 'type': 'show', 'date':str(date_dict['date'])})}]
         )
 
     return {"text":text,
