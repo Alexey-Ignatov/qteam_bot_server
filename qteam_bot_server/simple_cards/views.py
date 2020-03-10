@@ -547,10 +547,16 @@ class GetWeekendSchedule(APIView):
         dates_list = get_next_weekend_and_names()
         print(dates_list)
 
+        emodzi_list = ["🍕","️💥","🔥","🧠","👻",
+                       "👌","🥋","🎣","⛳","️🎱","🏋",
+                       "️‍️🛹","🥌","🥁","🎼","🎯","🎳",
+                       "🎮","🎲","🏁","💡","🎪","🏏",
+                       "🌪","🍿","🏄","‍️🎉","🧨","🎈"]
+        shuffle(emodzi_list)
 
         plans_by_date = []
         btns_list = []
-        final_text = "*Ваши планы на ближайшие выходные:*\n\n"
+        final_text = ''.join(emodzi_list[:3])+"*Ваши планы на ближайшие выходные:*\n\n"
         for date_dict in dates_list:
             day_plans_text_list = []
             day_book_events = BookEveningEvent.objects.filter(planed_date=date_dict['date'], bot_user=bot_user)
@@ -567,7 +573,7 @@ class GetWeekendSchedule(APIView):
             final_text += '*{}*'.format("🗓" + curr_plan['date_text'] + ": ") + (curr_plan['plans_text'] if curr_plan['plans_text'] \
                                                             else "Ничего не запланировано") + '\n\n'
 
-            btns_list.append([{'text': "🔎"+ curr_plan['date_text'],
+            btns_list.append([{'text': "🔎 "+ curr_plan['date_text'],
                                "callback_data": json.dumps({'type':"get_on_date", 'date': str(curr_plan['date'])})}])
 
 
