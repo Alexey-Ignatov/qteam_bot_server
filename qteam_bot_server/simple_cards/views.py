@@ -550,7 +550,7 @@ class GetWeekendSchedule(APIView):
 
         plans_by_date = []
         btns_list = []
-        final_text = "*Ваши планы на ближайшие выходные:*\n"
+        final_text = "*Ваши планы на ближайшие выходные:*\n\n"
         for date_dict in dates_list:
             day_plans_text_list = []
             day_book_events = BookEveningEvent.objects.filter(planed_date=date_dict['date'], bot_user=bot_user)
@@ -558,17 +558,17 @@ class GetWeekendSchedule(APIView):
                 day_plans_text_list.append(event.card.title)
 
             curr_plan = {
-                'date':date_dict['date'],
+                'date':"🗓" + date_dict['date'],
                 'date_text':date_dict['date_text'],
                 'plans_text': ",\n".join(day_plans_text_list)
             }
             plans_by_date.append(curr_plan)
 
-            final_text += '*{}*'.format(curr_plan['date_text'] + ": ") + (curr_plan['plans_text'] if  curr_plan['plans_text'] \
-                                                            else "Ничего не запланировано") + '\n'
+            final_text += '*{}*'.format(curr_plan['date_text'] + ": ") + (curr_plan['plans_text'] if curr_plan['plans_text'] \
+                                                            else "Ничего не запланировано") + '\n\n'
 
             btns_list.append([{'text': curr_plan['date_text'],
-                               "callback_data": json.dumps({'type':"get_on_date", 'date': str(curr_plan['date'])})}])
+                               "callback_data": json.dumps({'type':"get_on_date", 'date': "🔍"+str(curr_plan['date'])})}])
 
 
         # plans_by_date to text
