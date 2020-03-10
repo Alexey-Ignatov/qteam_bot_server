@@ -122,18 +122,24 @@ def get_date_btns(card, bot_user, card_dates):
     return btns_list
 
 
+
+def date_to_date_dict(date):
+    curr_time = timezone.now() + datetime.timedelta(hours=3)
+
+    text = dayno_2_dayname[date.weekday()] + ', ' + str(date.strftime("%d.%m"))
+    text = 'Сегодня' + ', ' + str(date.strftime("%d.%m")) if curr_time.date() == date else text
+    text = 'Завтра' + ', ' + str(date.strftime("%d.%m")) if (curr_time + datetime.timedelta(days=1)).date() == date else text
+    return {'date':date, 'date_text':text}
+
 def get_next_weekend_and_names():
     res_list = []
-    curr_time = timezone.now() +  datetime.timedelta(hours=3)
+    curr_time = timezone.now() + datetime.timedelta(hours=3)
     for i in range(7):
         i_date = (curr_time + datetime.timedelta(days=i)).date()
         if i_date.weekday() not in [4, 5, 6]:
             continue
 
-        text = dayno_2_dayname[i_date.weekday()] + ', ' + str(i_date.strftime("%d.%m"))
-        text = 'Сегодня'+ ', ' + str(i_date.strftime("%d.%m")) if i == 0 else text
-        text = 'Завтра' + ', ' + str(i_date.strftime("%d.%m")) if i == 1 else text
-        res_list.append({'date':i_date, 'date_text':text})
+        res_list.append(date_to_date_dict(i_date))
     return res_list
 
 
@@ -582,14 +588,14 @@ class GetWeekendSchedule(APIView):
 
 #def get
 
-def get_cards_set_summary_telegram_req(cards_list):
-    text ="Выберете развлечение для более подробного просмотра"
+def get_cards_set_summary_telegram_req(cards_list, date_dict):
+    text = date_dict['date_text'] + " Выберете развлечение для более подробного просмотра"
 
     btns_lines =[]
     for card in cards_list:
         btns_lines.append(
             [{"text": card.title,
-              "callback_data": json.dumps({'card_id': card.id, 'type': 'show'})}]
+              "callback_data": json.dumps({'card_id': card.id, 'type': 'show', 'date':str(date_dict['date'])})}]
         )
 
     return {"text":text,
@@ -623,4 +629,35 @@ class GetCardsOnDateApi(APIView):
 
         #return Response({"telegram_req":[get_card_message_telegram_req(card) for card in res_cards],
         #                 'req_count': len(res_cards) })
-        return Response({"telegram_req":get_cards_set_summary_telegram_req(res_cards)})
+        return Response({"telegram_req":get_cards_set_summary_telegram_req(res_cards, date_dict=date_to_date_dict(date))})
+
+
+
+
+class GetCertainCardApi(APIView):
+
+    @staticmethod
+    def get(request, bot_user_id):
+        real_data = json.loads(request.data['str_to_parse'])
+        resp_path = request.GET['resp_path']
+
+
+        card_id = real_data['card_id']
+        date = datetime.datetime.strptime(real_data['date'], "%Y-%m-%d").date()
+
+        try:
+            bot_user = BotUser.objects.get(bot_user_id=bot_user_id)
+        except BotUser.DoesNotExist:
+            bot_user = BotUser.objects.create(bot_user_id=bot_user_id)
+
+        upd_resp_path(bot_user, resp_path)
+
+        try:
+            card = Card.objects.get(pk=card_id)
+        except Card.DoesNotExist:
+            raise Http404
+
+
+
+        return Response({"telegram_req":[get_card_message_telegram_req(card,date_dict=date_to_date_dict(date))],
+                         'req_count': 1 })
