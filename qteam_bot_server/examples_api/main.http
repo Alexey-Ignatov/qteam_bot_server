@@ -107,7 +107,7 @@ GET http://127.0.0.1:8000/getweekendschedule/ddd/?resp_path=llllhhh
 GET http://127.0.0.1:8000/getcertaincard/733585869/?resp_path=5e55159e2b23da3ecf879abf/c/733585869
 
 {
-    "str_to_parse":"{\"type\":\"show\",\"date\":\"2020-03-05\",\"card_id\":12}"
+    "str_to_parse":"{\"type\":\"show_certain_card\",\"date\":\"2020-03-05\",\"card_id\":12}"
 }
 ###
 GET http://127.0.0.1:8000/getcardsondate/733585869/?resp_path=5e55159e2b23da3ecf879abf/c/733585869
