@@ -560,11 +560,11 @@ class GetWeekendSchedule(APIView):
             curr_plan = {
                 'date':date_dict['date'],
                 'date_text':date_dict['date_text'],
-                'plans_text': ", ".join(day_plans_text_list)
+                'plans_text': ",\n".join(day_plans_text_list)
             }
             plans_by_date.append(curr_plan)
 
-            final_text += curr_plan['date_text'] + ": " + (curr_plan['plans_text'] if  curr_plan['plans_text'] \
+            final_text += '*{}*'.format(curr_plan['date_text'] + ": ") + (curr_plan['plans_text'] if  curr_plan['plans_text'] \
                                                             else "Ничего не запланировано") + '\n'
 
             btns_list.append([{'text': curr_plan['date_text'],
