@@ -89,7 +89,7 @@ def get_card_message_telegram_req(card, date_dict =None,likes_btns=True):
         btns_lines.append(likes_btns)
     if date_dict:
         book_btns = [
-            {'text': date_dict['date_text'], "callback_data": json.dumps({'card_id': card.id, 'date': str(date_dict['date'])})}
+            {'text': date_dict['date_text'], "callback_data": json.dumps({'card_id': card.id, 'date': str(date_dict['date']), 'type':'book'})}
         ]
         btns_lines.append(book_btns)
 
